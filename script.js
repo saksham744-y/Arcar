@@ -197,7 +197,7 @@ async function updateViewCount() {
         }
 
         const data = await response.json();
-        const viewCountElement = document.getElementById('view-counter');
+        const viewCountElement = document.getElementById('view-count');
         if (viewCountElement) {
             viewCountElement.textContent = data.value;
         }
