@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 230">
+  <defs>
+    <linearGradient id="g1" x1="0.15" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#8a2be2"/>
+      <stop offset="0.45" stop-color="#ff3d6e"/>
+      <stop offset="1" stop-color="#ffb03a"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4d7d"/>
+      <stop offset="1" stop-color="#ff9a3c"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7a30"/>
+      <stop offset="1" stop-color="#6a11cb"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="108" cy="30" rx="30" ry="21" transform="rotate(-12 108 30)" fill="url(#g2)"/>
+  <path d="M38 150 C26 100 70 66 112 70 C140 72 152 84 176 66 C198 48 226 36 236 56 C246 76 222 98 200 104 C178 110 182 132 184 154 C186 192 150 214 116 206 C96 202 86 184 66 186 C46 188 42 172 38 150 Z" fill="url(#g1)"/>
+  <path d="M64 120 C60 98 90 84 118 92 C150 100 190 100 206 112 C190 124 150 138 118 140 C90 142 66 140 64 120 Z" fill="url(#g2)" opacity="0.9"/>
+  <path d="M96 182 C84 170 110 154 140 156 C170 158 190 162 182 184 C174 204 124 204 96 182 Z" fill="url(#g3)" opacity="0.95"/>
+</svg>
