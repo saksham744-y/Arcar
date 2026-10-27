@@ -164,7 +164,7 @@ function closeModal() {
   lastFocus && lastFocus.focus && lastFocus.focus();
 }
 
-document.getElementById("commBtn").addEventListener("click", openModal);
+
 modal.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeModal(); });
 addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
 text.addEventListener("input", () => { countEl.textContent = text.value.length + " / 280"; });
