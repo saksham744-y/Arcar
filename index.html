@@ -71,7 +71,7 @@
       </div>
 
 <form id="message-form">
-    <input type="text" id="message-input" placeholder="Type your message..." required />
+    < type="text" id="message-input" placeholder="Type your message..." required />
     <button type="submit">Send</button>
 </form>
 
@@ -79,12 +79,12 @@
       
       <ul class="msgs" id="commList" aria-live="polite"></ul>
 
-      <form class="comm-form" id="commForm" autocomplete="off">
-        <textarea id="commText" maxlength="280" rows="3" placeholder="Say something to the community…"></textarea>
+      <form class="comm-form" id="message-form" autocomplete="off">
+        <input id="commText" maxlength="280" rows="3" placeholder="Say something to the community…">
         <div class="form-row">
           <span class="count" id="commCount">0 / 280</span>
           <span class="status" id="commStatus" role="status"></span>
-          <button class="send" id="commSend" type="submit">Post anonymously</button>
+          <button class="send" id="commSend" type="submit">Post</button>
         </div>
       </form>
       <p class="fineprint">Messages are shared with everyone who visits. ARCAR doesn't save your name, account or IP address.</p>
