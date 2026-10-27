@@ -4,7 +4,7 @@
    ============================================================ */
 const SECTION = {
   name: "Daybreak",
-  url: "https://example.com",
+  url: "https://saksham744-y.github.io",
   url2: "https://github.com/saksham744-y/Daybreak/releases/download/v2.0/daybreak2.apk",
   images: ["images/1.png", "images/2.png", "images/3.png"],
   detail:
