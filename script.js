@@ -4,12 +4,12 @@
    ============================================================ */
 const SECTION = {
   name: "Daybreak",
-  url: "https://saksham744-y.github.io/",
+  url: "https://example.com",
   url2: "https://github.com/saksham744-y/Daybreak/releases/download/v2.0/daybreak2.apk",
   images: ["images/1.png", "images/2.png", "images/3.png"],
   detail:
-    "Your plan, ticks and notes are saved only on your device. Daybreak has no account and does not send your data anywhere." +
-    "Daybreak is an app as well as a website. Type or paste your tasks in plain words, and Daybreak turns them into a timed daily schedule with reminders."
+    "Daybreak is an app as well as a website. Type or paste your tasks in plain words, and Daybreak turns them into a timed daily schedule with reminders. " +
+    "Your plan, ticks and notes are saved only on your device. Daybreak has no account and does not send your data anywhere."
 };
 
 const FALLBACKS = [
@@ -25,7 +25,7 @@ const hub = document.getElementById("hub");
 hub.innerHTML = `
   <div class="acc">
     <button class="acc-bar" id="accBar" aria-expanded="false" aria-controls="accPanel">
-      <img class="acc-logo" src="./Apps_logo/daybreak.png" alt="logo" />
+      <img class="acc-logo" src="./Apps_logo/daybreak.png" alt="" />
       <span class="acc-name">${esc(SECTION.name)}</span>
       <i class="chev" aria-hidden="true"></i>
     </button>
@@ -41,11 +41,10 @@ hub.innerHTML = `
         </div>
         <div class="detail" style="--d:.4s">
           <p>${esc(SECTION.detail)}</p>
-          <div class="Buttons">
+         <div class="Buttons">
           <a class="visit" href="${esc(SECTION.url)}" target="_blank" rel="noopener noreferrer">Visit website →</a>
           <a class="visit" href="${esc(SECTION.url2)}" target="_blank" rel="noopener noreferrer">Download App →</a>
           </div>
-          
         </div>
       </div>
     </div>
@@ -77,3 +76,111 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
 }
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ============================================================
+   Page views + anonymous community  (needs:  node server.js)
+   - views     → saved in data/views.txt
+   - messages  → saved in data/community.txt  (no names / no IDs)
+   ============================================================ */
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || "Something went wrong");
+  return data;
+}
+
+/* ---------- Page view counter ---------- */
+const viewEls = document.querySelectorAll("[data-views]");
+(async function countView() {
+  try {
+    let counted = false;
+    try { counted = sessionStorage.getItem("arcar-counted") === "1"; } catch {}
+    // count once per browser tab session, so refreshing doesn't inflate the number
+    const data = await api("/api/views", { method: counted ? "GET" : "POST" });
+    if (!counted) { try { sessionStorage.setItem("arcar-counted", "1"); } catch {} }
+    viewEls.forEach((el) => (el.textContent = Number(data.views).toLocaleString()));
+  } catch {
+    viewEls.forEach((el) => (el.textContent = "–"));
+  }
+})();
+
+/* ---------- Community popup ---------- */
+const modal = document.getElementById("commModal");
+const list = document.getElementById("commList");
+const form = document.getElementById("commForm");
+const text = document.getElementById("commText");
+const countEl = document.getElementById("commCount");
+const statusEl = document.getElementById("commStatus");
+const sendBtn = document.getElementById("commSend");
+let poll = null, lastFocus = null;
+
+function ago(iso) {
+  const s = Math.max(0, (Date.now() - Date.parse(iso)) / 1000);
+  if (s < 45) return "just now";
+  if (s < 3600) return Math.round(s / 60) + " min ago";
+  if (s < 86400) return Math.round(s / 3600) + " h ago";
+  return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+}
+
+function render(messages) {
+  const stick = list.scrollTop + list.clientHeight >= list.scrollHeight - 40;
+  list.textContent = "";
+  if (!messages.length) {
+    const li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "No messages yet — be the first to say hello 👋";
+    list.appendChild(li);
+    return;
+  }
+  messages.forEach((m, i) => {
+    const li = document.createElement("li");
+    li.style.animationDelay = Math.min(i, 12) * 0.03 + "s";
+    const av = document.createElement("span"); av.className = "av"; av.textContent = "A";
+    const bubble = document.createElement("div"); bubble.className = "bubble";
+    const p = document.createElement("p"); p.textContent = m.text;          // textContent = safe, no HTML injection
+    const t = document.createElement("time"); t.dateTime = m.t; t.textContent = "Anonymous · " + ago(m.t);
+    bubble.append(p, t); li.append(av, bubble); list.appendChild(li);
+  });
+  if (stick) list.scrollTop = list.scrollHeight;
+}
+
+async function load() {
+  try { render((await api("/api/community")).messages); statusEl.textContent = ""; }
+  catch { list.textContent = ""; const li = document.createElement("li"); li.className = "empty";
+          li.textContent = "Community is offline. Start the site with:  node server.js"; list.appendChild(li); }
+}
+
+function openModal() {
+  lastFocus = document.activeElement;
+  modal.classList.add("open"); modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  load().then(() => { list.scrollTop = list.scrollHeight; });
+  poll = setInterval(load, 15000);                       // pick up new messages while open
+  setTimeout(() => text.focus(), 250);
+}
+function closeModal() {
+  modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = ""; clearInterval(poll);
+  lastFocus && lastFocus.focus && lastFocus.focus();
+}
+
+document.getElementById("commBtn").addEventListener("click", openModal);
+modal.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeModal(); });
+addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+text.addEventListener("input", () => { countEl.textContent = text.value.length + " / 280"; });
+text.addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) form.requestSubmit(); });
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = text.value.trim();
+  if (!message) { statusEl.className = "status"; statusEl.textContent = "Write something first."; return; }
+  sendBtn.disabled = true; statusEl.className = "status"; statusEl.textContent = "Posting…";
+  try {
+    await api("/api/community", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message }) });
+    text.value = ""; countEl.textContent = "0 / 280";
+    statusEl.className = "status ok"; statusEl.textContent = "Posted ✓";
+    await load(); list.scrollTop = list.scrollHeight;
+  } catch (err) {
+    statusEl.className = "status"; statusEl.textContent = err.message || "Could not post. Is the server running?";
+  } finally { sendBtn.disabled = false; }
+});

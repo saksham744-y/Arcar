@@ -28,6 +28,17 @@
       <img src="logo.svg" alt="ARCAR logo" class="brand-logo" />
       <span class="brand-name">ARCAR</span>
     </a>
+
+    <div class="nav-actions">
+      <span class="pill" title="Total page views">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <b data-views>–</b><span class="pill-label">views</span>
+      </span>
+      <button class="comm-btn" id="commBtn" type="button" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Community</span>
+      </button>
+    </div>
   </header>
 
   <main id="top">
@@ -43,8 +54,35 @@
   </main>
 
   <footer class="footer">
-    <p>© <span id="year"></span> ARCAR</p>
+    <img src="logo.svg" alt="" class="footer-logo" />
+    <p>© <span id="year"></span> ARCAR · <span data-views>–</span> page views</p>
   </footer>
+
+  <!-- Anonymous community popup -->
+  <div class="modal" id="commModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="commTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="commTitle">Community</h2>
+          <p>Anonymous · no names, no accounts</p>
+        </div>
+        <button class="modal-close" id="commClose" type="button" aria-label="Close" data-close>×</button>
+      </div>
+
+      <ul class="msgs" id="commList" aria-live="polite"></ul>
+
+      <form class="comm-form" id="commForm" autocomplete="off">
+        <textarea id="commText" maxlength="280" rows="3" placeholder="Say something to the community…"></textarea>
+        <div class="form-row">
+          <span class="count" id="commCount">0 / 280</span>
+          <span class="status" id="commStatus" role="status"></span>
+          <button class="send" id="commSend" type="submit">Post anonymously</button>
+        </div>
+      </form>
+      <p class="fineprint">Messages are shared with everyone who visits. ARCAR doesn't save your name, account or IP address.</p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
