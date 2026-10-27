@@ -185,23 +185,27 @@ form.addEventListener("submit", async (e) => {
   } finally { sendBtn.disabled = false; }
 });
 
-// Update view count using a free counter API
 async function updateViewCount() {
     try {
-        // Replace 'mysite' with your unique namespace and 'pageviews' with your key
-        const response = await fetch('https://abacus.jasoncameron.dev/hit/mysite/pageviews1');
-        const data = await response.json();
+        // Simple GET request to the counter API
+        const response = await fetch('https://abacus.jasoncameron.dev/hit/arcar/pageviews', {
+            method: 'GET'
+        });
         
-        // Target the element in your HTML (ensure you have an element with id="view-count")
-        const viewCountElement = document.getElementById('view-counter');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const viewCountElement = document.getElementById('view-count');
         if (viewCountElement) {
             viewCountElement.textContent = data.value;
         }
     } catch (error) {
         console.error('Error updating view count:', error);
+        const viewCountElement = document.getElementById('view-count');
+        if (viewCountElement) {
+            viewCountElement.textContent = '1'; // fallback value
+        }
     }
 }
-
-document.addEventListener('DOMContentLoaded', updateViewCount);
-
-
