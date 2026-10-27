@@ -184,3 +184,22 @@ form.addEventListener("submit", async (e) => {
     statusEl.className = "status"; statusEl.textContent = err.message || "Could not post. Is the server running?";
   } finally { sendBtn.disabled = false; }
 });
+
+// Update view count using a free counter API
+async function updateViewCount() {
+    try {
+        // Replace 'mysite' with your unique namespace and 'pageviews' with your key
+        const response = await fetch('https://abacus.jasoncameron.dev/hit/mysite/pageviews');
+        const data = await response.json();
+        
+        // Target the element in your HTML (ensure you have an element with id="view-count")
+        const viewCountElement = document.getElementById('view-count');
+        if (viewCountElement) {
+            viewCountElement.textContent = data.value;
+        }
+    } catch (error) {
+        console.error('Error updating view count:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', updateViewCount);
