@@ -1,16 +1,34 @@
-/* ============================================================
-   ARCAR — edit this one block to change the section:
-   name, link, detail text and the 3 images (images/1.png, 2.png, 3.png)
-   ============================================================ */
-const SECTION = {
-  name: "Daybreak",
-  url: "https://saksham744-y.github.io",
-  url2: "https://github.com/saksham744-y/Daybreak/releases/download/v2.0/daybreak2.apk",
-  images: ["images/1.png", "images/2.png", "images/3.png"],
-  detail:
+// Increment view count on page load
+fetch('https://abacus.jasoncameron.dev/hit/mysite.com/homepage01')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('data-views').innerText = data.value;
+  });
+
+
+const BOXES = [
+  {
+    name: "Daybreak",
+    logo : "./Apps_logo/daybreak.png",
+    url: "https://saksham744-y.github.io/index.html",
+    url2txt:"Download App",
+    url2: "https://github.com/saksham744-y/Daybreak/releases/download/v3.0/daybreak3.apk",
+    images: ["images/1.png", "images/2.png", "images/3.png"],
+    detail:
     "Daybreak is an app as well as a website. Type or paste your tasks in plain words, and Daybreak turns them into a timed daily schedule with reminders. " +
     "Your plan, ticks and notes are saved only on your device. Daybreak has no account and does not send your data anywhere."
-};
+  },
+  {
+    name: "ConverterLab",
+    logo : "./Apps_logo/converterlab.png",
+    url: " https://saksham744-y.github.io/ConvertLab/",
+    url2txt:"Visit GitHub",
+    url2: "https://github.com/saksham744-y/ConvertLab",
+    images: ["images/4.png", "images/5.png", "images/6.png"],
+    detail:
+      "ConvertLab is a private, in-browser file converter and small creative toolkit. Video, audio, images, PDFs, documents, GIFs, archives, units, time zones and a paint editor all run on your own device. Files are never uploaded to a server."
+  }
+];
 
 const FALLBACKS = [
   "linear-gradient(135deg,#ffb03a,#ff3d6e)",
@@ -20,41 +38,46 @@ const FALLBACKS = [
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-/* ---------- Render the section ---------- */
-const hub = document.getElementById("hub");
-hub.innerHTML = `
-  <div class="acc">
-    <button class="acc-bar" id="accBar" aria-expanded="false" aria-controls="accPanel">
-      <img class="acc-logo" src="./Apps_logo/daybreak.png" alt="" />
-      <span class="acc-name">${esc(SECTION.name)}</span>
-      <i class="chev" aria-hidden="true"></i>
-    </button>
+/* ---------- Render every box ---------- */
+const hubs = document.getElementById("hubs");
+BOXES.forEach((box, b) => {
+  const hub = document.createElement("section");
+  hub.className = "hub reveal";
+  hub.innerHTML = `
+    <div class="acc">
+      <button class="acc-bar" type="button" aria-expanded="false" aria-controls="accPanel${b}">
+        <img class="acc-logo" src="${esc(box.logo)}" alt="" />
+        <span class="acc-name" style="padding-left: 10px;">${esc(box.name)}</span>
+        <i class="chev" aria-hidden="true"></i>
+      </button>
 
-    <div class="acc-panel" id="accPanel">
-      <div class="acc-inner">
-        <div class="gallery">
-          ${SECTION.images.map((src, i) => `
-            <figure class="shot" style="--d:${i * 0.12}s; background:${FALLBACKS[i % 3]}">
-              <span class="shot-fallback">IMG ${i + 1}</span>
-              <img src="${esc(src)}" alt="${esc(SECTION.name)} image ${i + 1}" loading="lazy" onerror="this.remove()" />
-            </figure>`).join("")}
-        </div>
-        <div class="detail" style="--d:.4s">
-          <p>${esc(SECTION.detail)}</p>
-         <div class="Buttons">
-          <a class="visit" href="${esc(SECTION.url)}" target="_blank" rel="noopener noreferrer">Visit website →</a>
-          <a class="visit" href="${esc(SECTION.url2)}" target="_blank" rel="noopener noreferrer">Download App →</a>
+      <div class="acc-panel" id="accPanel${b}">
+        <div class="acc-inner">
+          <div class="gallery">
+            ${box.images.map((src, i) => `
+              <figure class="shot" style="--d:${i * 0.12}s; background:${FALLBACKS[i % 3]}">
+                <span class="shot-fallback">IMG ${i + 1}</span>
+                <img src="${esc(src)}" alt="${esc(box.name)} image ${i + 1}" loading="lazy" onerror="this.remove()" />
+              </figure>`).join("")}
+          </div>
+          <div class="detail" style="--d:.4s">
+            <p>${esc(box.detail)}</p>
+            <div class="Buttons">
+              <a class="visit" href="${esc(box.url)}" target="_blank" rel="noopener noreferrer">Visit website →</a>
+              <a class="visit" href="${esc(box.url2)}" target="_blank" rel="noopener noreferrer">${esc(box.url2txt)} →</a>
+          </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
+  hubs.appendChild(hub);
 
-/* ---------- Open / close ---------- */
-const bar = document.getElementById("accBar");
-bar.addEventListener("click", () => {
-  const open = hub.classList.toggle("open");
-  bar.setAttribute("aria-expanded", open);
+  /* open / close this box (each box works on its own) */
+  const bar = hub.querySelector(".acc-bar");
+  bar.addEventListener("click", () => {
+    const open = hub.classList.toggle("open");
+    bar.setAttribute("aria-expanded", open);
+  });
 });
 
 /* ---------- Scroll reveal ---------- */
@@ -77,32 +100,6 @@ if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
-/* ============================================================
-   Page views + anonymous community  (needs:  node server.js)
-   - views     → saved in data/views.txt
-   - messages  → saved in data/community.txt  (no names / no IDs)
-   ============================================================ */
-async function api(url, opts) {
-  const r = await fetch(url, opts);
-  const data = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(data.error || "Something went wrong");
-  return data;
-}
-
-/* ---------- Page view counter ---------- */
-const viewEls = document.querySelectorAll("[data-views]");
-(async function countView() {
-  try {
-    let counted = false;
-    try { counted = sessionStorage.getItem("arcar-counted") === "1"; } catch {}
-    // count once per browser tab session, so refreshing doesn't inflate the number
-    const data = await api("/api/views", { method: counted ? "GET" : "POST" });
-    if (!counted) { try { sessionStorage.setItem("arcar-counted", "1"); } catch {} }
-    viewEls.forEach((el) => (el.textContent = Number(data.views).toLocaleString()));
-  } catch {
-    viewEls.forEach((el) => (el.textContent = "–"));
-  }
-})();
 
 /* ---------- Community popup ---------- */
 const modal = document.getElementById("commModal");
@@ -164,7 +161,7 @@ function closeModal() {
   lastFocus && lastFocus.focus && lastFocus.focus();
 }
 
-
+document.getElementById("commBtn").addEventListener("click", openModal);
 modal.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeModal(); });
 addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
 text.addEventListener("input", () => { countEl.textContent = text.value.length + " / 280"; });
@@ -184,28 +181,3 @@ form.addEventListener("submit", async (e) => {
     statusEl.className = "status"; statusEl.textContent = err.message || "Could not post. Is the server running?";
   } finally { sendBtn.disabled = false; }
 });
-
-async function updateViewCount() {
-    try {
-        // Simple GET request to the counter API
-        const response = await fetch('https://abacus.jasoncameron.dev/hit/arcar/pageviews', {
-            method: 'GET'
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const viewCountElement = document.getElementById('view-count');
-        if (viewCountElement) {
-            viewCountElement.textContent = data.value;
-        }
-    } catch (error) {
-        console.error('Error updating view count:', error);
-        const viewCountElement = document.getElementById('view-count');
-        if (viewCountElement) {
-            viewCountElement.textContent = '1'; // fallback value
-        }
-    }
-}

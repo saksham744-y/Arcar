@@ -15,12 +15,34 @@
   --ease: cubic-bezier(.2, .8, .2, 1);
 }
 
+/* ---------- Page scrollbar (WebKit: Chrome, Edge, Safari, Opera) ---------- */
+b
+
+/* Firefox (it doesn't support ::-webkit-scrollbar) */
+html {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: #ff3d6e transparent;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+
 body { font-family: "Poppins", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; min-height: 100vh; }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
-
+body::-webkit-scrollbar {
+  width: 12px;
+}
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8a2be2, #ff3d6e, #8a2be2);
+  border-radius: 999px;
+  border: 3px solid #170042;      /* makes the thumb look slim */
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #5b0fd1, #ff3d6e, #5b0fd1);
+}
 /* ---------- Background ---------- */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(1200px 700px at 80% -10%, var(--bg-2), var(--bg)); }
 .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; will-change: transform; }
@@ -61,9 +83,9 @@ a { color: inherit; text-decoration: none; }
 .hub:hover .acc, .hub.open .acc { border-color: rgba(255,176,58,.45); box-shadow: 0 24px 70px rgba(0,0,0,.35), 0 0 40px rgba(255,61,110,.2); }
 
 /* the bar:  [logo]  NAME  .......  v */
-.acc-bar { width: 100%; display: flex; align-items: center; gap: 16px; padding: 22px clamp(16px, 3vw, 34px); cursor: pointer; border: 0; color: #fff; font-family: inherit; text-align: left;
+.acc-bar { width: 100%; display: flex; align-items: center; gap: 11px; padding: 22px clamp(16px, 3vw, 34px); cursor: pointer; border: 0; color: #fff; font-family: inherit; text-align: left;
   background: transparent; position: relative; transition: background .3s; }
-.acc-bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--grad); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
+/* .acc-bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--grad); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); } */
 .hub.open .acc-bar::after { transform: scaleX(1); }
 .acc-bar:hover { background: rgba(255,255,255,.05); }
 .acc-bar:focus-visible { outline: 2px solid var(--orange); outline-offset: -4px; }
